@@ -10,7 +10,7 @@ INCLUDE += $(shell $(PKG_CONFIG) --cflags libserialport)
 LIBS += $(shell $(PKG_CONFIG) --libs libserialport)
 
 HEADERS = $(wildcard *.h *.hpp)
-SOURCES = $(wildcard *.cpp)
+SOURCES = $(wildcard *.cpp *.cc)
 BINARIES = $(SOURCES:.cpp=)
 
 .PHONY: all clean rebuild print
