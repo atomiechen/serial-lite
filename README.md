@@ -31,7 +31,11 @@ make info
 
 ### Installed
 
-If you installed your libraries to your system, the build steps remain the same. You don't need any additional flag.
+If you installed your libraries to your system, you can use flag `-lserial` to link:
+
+```sh
+g++ main.cpp -o main -lserial
+```
 
 ### Not installed
 
@@ -58,7 +62,7 @@ Some specifics:
 
 - macOS: 
 
-  - When link with static library you need framework flags to support serial port enumeration: (already considered by `Makefile`)
+  - Before linking with static library, you need framework flags to support serial port enumeration: (already considered by `Makefile`)
 
     ```sh
     -framework CoreFoundation -framework IOKit
