@@ -16,7 +16,9 @@ DLIB_FILE := libserial.so
 SERIAL_SLIB := $(LIB_DIR)/$(SLIB_FILE)
 SERIAL_DLIB := $(LIB_DIR)/$(DLIB_FILE)
 
+## examples
 EXAMPLES_DIR := examples
+STATIC := false
 
 ## ref: https://stackoverflow.com/questions/3774568/makefile-issue-smart-way-to-scan-directory-tree-for-c-files
 # Make does not offer a recursive wildcard function, so here's one:
@@ -25,9 +27,10 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 SERIAL_HEADERS := $(call rwildcard,$(INC_DIR)/,*.h)
 SERIAL_SOURCES := $(call rwildcard,$(SRC_DIR)/,*.cc)
 SERIAL_OBJS := $(SERIAL_SOURCES:cc=o)
+TMP_SOURCES := $(addprefix ../,$(SERIAL_SOURCES))
 
 CC := g++
-CCFLAGS := -I$(INC_DIR)
+CCFLAGS := 
 LDFLAGS :=
 ifeq ($(detect_OS),Windows_NT)
 	CCFLAGS += -D_WIN32
@@ -66,14 +69,15 @@ slib: $(SERIAL_SLIB)
 
 dlib: $(SERIAL_DLIB)
 
+## change directory to make dlib locally
 $(SERIAL_DLIB): $(SERIAL_SOURCES) $(LIB_DIR)
-	$(CC) $(CCFLAGS) $(LDFLAGS) -fPIC -shared -o $@ $(SERIAL_SOURCES)
+	cd $(LIB_DIR) && $(CC) -I../$(INC_DIR) $(CCFLAGS) $(LDFLAGS) -fPIC -shared -o $(DLIB_FILE) $(TMP_SOURCES)
 
 $(SERIAL_SLIB): $(SERIAL_OBJS) $(LIB_DIR)
 	$(AR) rvs $@ $(SERIAL_OBJS)
 
 %.o: %.cc
-	$(CC) $(CCFLAGS) -c $< -o $@
+	$(CC) -I$(INC_DIR) $(CCFLAGS) -c $< -o $@
 
 $(LIB_DIR):
 	$(MKDIR) $@
@@ -113,7 +117,7 @@ uninstall:
 	$(RM) -r $(SYSTEM_INCLUDE_PATH)/$(INC_ROOT)
 
 examples:
-	-$(MAKE) -C $(EXAMPLES_DIR)
+	-$(MAKE) -C $(EXAMPLES_DIR) STATIC=$(STATIC)
 
 else
 

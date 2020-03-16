@@ -23,6 +23,8 @@ make install
 make uninstall
 ## print useful info
 make info
+## build example codes (specify STATIC to use static library or not)
+make examples [STATIC=true]
 ```
 
 
@@ -68,7 +70,7 @@ Some specifics:
     -framework CoreFoundation -framework IOKit
     ```
 
-  - A dynamic library has its install name and the executable will find it according to this name. In this project, the `libserial.so` will have its name `lib/libserial.so`, thus one needs to copy the `lib` folder with `libserail.so` inside to be along with the executable.
+  - A dynamic library has its install name and the executable will find it according to this name. In this project, the built `libserial.so`'s name is `libserial.so`, thus the executable will find it locally (or in system configured paths if fails). One needs to put the executable and dynamic library together to make them work.
 
 
 
