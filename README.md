@@ -1,41 +1,84 @@
 # serial-lite
 
-A lite version of cross-platform c++ serial port library [wjwwood/serial](https://github.com/wjwwood/serial), without original installation steps on use. You only need to copy these files to your project, build your own dynamic library file, and use it to link with your own compiled codes.
+A lite version of cross-platform c++ serial port library [wjwwood/serial](https://github.com/wjwwood/serial), without original installation steps on use. It turns out that the original installation steps are annoying for me because I do not want cmake and especially, catkin, as dependencies.
 
-It turns out that the original installation steps are annoying for me because I do not want  cmake and especially, catkin, as dependencies.
+You can build your own dynamic and static `serial` libraries for portable use, or install them to your system. Example makefile is provided to build example codes using this library.
+
+
+
+## How to build libraries
+
+Core sources of [wjwwood/serial](https://github.com/wjwwood/serial) are included in folder `include` (header files) and `src` (implementations). Use make commands to build library files in `lib` folder: 
+
+```sh
+## build both dynamic and static libraries
+make
+## build static library file libserial.a
+make slib
+## build dynamic library file libserial.so
+make dlib
+## install both files to system
+make install
+## uninstall
+make uninstall
+## print useful info
+make info
+```
 
 
 
 ## How to use
 
-All sources of [wjwwood/serial](https://github.com/wjwwood/serial) are included in folder `libserial`. In this folder you can build your own dynamic library `libserial.so` for your platform by make:
+### Installed
+
+If you installed your libraries to your system, the build steps remain the same. You don't need any additional flag.
+
+### Not installed
+
+An example file from [wjwwood/serial](https://github.com/wjwwood/serial) is also provided here in `examples` folder, along with an example makefile to build the executable:
 
 ```sh
-cd libserial
+cd examples
+## use dynamic library to build executable
 make
+
+## If you want to use static library instead, 
+## pass different STATIC value to the make tool:
+make rebuild STATIC=true
+
+## print useful info, and you can see flags
+## intended for the compiler
+make info
+make info STATIC=true
 ```
 
-Then you can use the Makefile back in the root directory to compile your own code. Or you can adapt to your project. The keys are the compile flags for include path and library:
+Note this `Makefile` in `examples` folder includes `detect_OS.mk` in the root directory, and if you want to use somewhere else you should copy both files or combine them. `detect_OS.mk` is for detecting OS info and necessary for further build.
 
-```makefile
-## in root folder
-INCLUDE = -Ilibserial/include
-LIBS = -Llibserial -lserial
-```
+Some specifics: 
 
-For simple use, you can just copy your `.cpp` and `.h` files to the root folder and use make command to build executable:
+- macOS: 
 
-```sh
-## in root folder
-make
-```
+  - When link with static library you need framework flags to support serial port enumeration: (already considered by `Makefile`)
+
+    ```sh
+    -framework CoreFoundation -framework IOKit
+    ```
+
+  - A dynamic library has its install name and the executable will find it according to this name. In this project, the `libserial.so` will have its name `lib/libserial.so`, thus one needs to copy the `lib` folder with `libserail.so` inside to be along with the executable.
 
 
 
 ## Dependencies
 
-- g++: for dynamic library generation
-- make: for automatic OS detection
+- g++: for library generation
+  - ar: for static library
+- make: for automatic OS detection and build
+
+
+
+## TODO
+
+Support for Windows and Linux.
 
 
 
