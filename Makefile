@@ -33,18 +33,18 @@ CC := g++
 CCFLAGS := 
 LDFLAGS :=
 ifeq ($(detect_OS),Windows_NT)
-	CCFLAGS += -D_WIN32
+# 	CCFLAGS += -D_WIN32
 	RM = del
 	CP = copy
 endif
 ifeq ($(detect_OS),MINGW32)
-	CCFLAGS += -D_WIN32
-	CCFLAGS += -D__MINGW32__
+# 	CCFLAGS += -D_WIN32
+# 	CCFLAGS += -D__MINGW32__
 	RM = del
 	CP = copy
 endif
 ifeq ($(detect_OS),Darwin)
-	CCFLAGS += -D__APPLE__
+# 	CCFLAGS += -D__APPLE__
 	LDFLAGS += -framework CoreFoundation
 	LDFLAGS += -framework IOKit
 # 	CCFLAGS += -install_name @rpath/libserial.so
@@ -52,13 +52,13 @@ ifeq ($(detect_OS),Darwin)
 	SYSTEM_INCLUDE_PATH = /usr/local/include/
 endif
 ifeq ($(detect_OS),Linux)
-	CCFLAGS += -D__linux__
+# 	CCFLAGS += -D__linux__
 endif
 ifeq ($(detect_OS),FreeBSD)
-	CCFLAGS += -D__FreeBSD__
+# 	CCFLAGS += -D__FreeBSD__
 endif
 ifeq ($(detect_OS),OpenBSD)
-	CCFLAGS += -D__OpenBSD__
+# 	CCFLAGS += -D__OpenBSD__
 endif
 
 .PHONY: all slib dlib clean veryclean rebuild info install uninstall examples
