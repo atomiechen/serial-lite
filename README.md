@@ -17,9 +17,9 @@ make
 make slib
 ## build dynamic library file libserial.so
 make dlib
-## install both files to system
+## install both files to system (not for Windows)
 make install
-## uninstall
+## uninstall (not for Windows)
 make uninstall
 ## print useful info
 make info
@@ -31,7 +31,7 @@ make examples [STATIC=true]
 
 ## How to use
 
-### Installed
+### Installed (not for Windows)
 
 If you installed your libraries to your system, you can use flag `-lserial` to link:
 
@@ -71,6 +71,18 @@ Some specifics:
     ```
 
   - A dynamic library has its install name and the executable will find it according to this name. In this project, the built `libserial.so`'s name is `libserial.so`, thus the executable will find it locally (or in system configured paths if fails). One needs to put the executable and dynamic library together to make them work.
+  
+- Windows
+
+  - The output dynamic library file's suffix is `dll`.
+
+  - To run `make clean` and `make veryclean` you need a Unix shell like git-bash. You can use Cmder.
+
+  - Link SetupAPI to build dynamic library (libraries need to be specified last when using MinGW, https://stackoverflow.com/a/46263157/11854304)：
+
+    ```sh
+    -lsetupapi
+    ```
 
 
 
@@ -78,13 +90,14 @@ Some specifics:
 
 - g++: for library generation
   - ar: for static library
-- make: for automatic OS detection and build
+- GNU make: for automatic OS detection and build
+  - Unix-like shell (bash/zsh/...) or that supports unix-like path & commands (e.g. rm)
 
 
 
 ## TODO
 
-Support for Windows and Linux.
+Support for Linux.
 
 
 

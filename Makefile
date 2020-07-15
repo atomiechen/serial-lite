@@ -12,9 +12,10 @@ INC_DIR := include
 LIB_DIR := lib
 SRC_DIR := src
 SLIB_FILE := libserial.a
-DLIB_FILE := libserial.so
+DLIB_SUFFIX = so
+DLIB_FILE = libserial.$(DLIB_SUFFIX)
 SERIAL_SLIB := $(LIB_DIR)/$(SLIB_FILE)
-SERIAL_DLIB := $(LIB_DIR)/$(DLIB_FILE)
+SERIAL_DLIB = $(LIB_DIR)/$(DLIB_FILE)
 
 ## examples
 EXAMPLES_DIR := examples
@@ -34,14 +35,17 @@ CCFLAGS :=
 LDFLAGS :=
 ifeq ($(detect_OS),Windows_NT)
 # 	CCFLAGS += -D_WIN32
-	RM = del
-	CP = copy
+	LDFLAGS += -lsetupapi
+	# LDFLAGS += -lhid
+	DLIB_SUFFIX = dll
+	# RM = del
+	# CP = copy
 endif
 ifeq ($(detect_OS),MINGW32)
 # 	CCFLAGS += -D_WIN32
 # 	CCFLAGS += -D__MINGW32__
-	RM = del
-	CP = copy
+	# RM = del
+	# CP = copy
 endif
 ifeq ($(detect_OS),Darwin)
 # 	CCFLAGS += -D__APPLE__
@@ -71,7 +75,8 @@ dlib: $(SERIAL_DLIB)
 
 ## change directory to make dlib locally
 $(SERIAL_DLIB): $(SERIAL_SOURCES) $(LIB_DIR)
-	cd $(LIB_DIR) && $(CC) -I../$(INC_DIR) $(CCFLAGS) $(LDFLAGS) -fPIC -shared -o $(DLIB_FILE) $(TMP_SOURCES)
+	cd $(LIB_DIR) && $(CC) -I../$(INC_DIR) $(CCFLAGS) -fPIC -shared -o $(DLIB_FILE) $(TMP_SOURCES) $(LDFLAGS)
+#	cd $(LIB_DIR) && $(CC) -I../$(INC_DIR) $(CCFLAGS) $(LDFLAGS) -fPIC -shared -o $(DLIB_FILE) $(TMP_SOURCES)
 
 $(SERIAL_SLIB): $(SERIAL_OBJS) $(LIB_DIR)
 	$(AR) rvs $@ $(SERIAL_OBJS)
@@ -102,6 +107,9 @@ info:
 	@echo $(SERIAL_SOURCES)
 	@echo SERIAL_OBJS:
 	@echo $(SERIAL_OBJS)
+	@echo OUTPUT PATH: $(LIB_DIR)
+	@echo OUTPUT STATIC LIB FILE: $(DLIB_FILE)
+	@echo OUTPUT DYNAMIC LIB FILE: $(SLIB_FILE)
 	@echo INSTALL PATH:
 	@echo library: $(SYSTEM_LIB_PATH)
 	@echo include: $(SYSTEM_INCLUDE_PATH)
