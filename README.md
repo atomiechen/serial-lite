@@ -64,7 +64,7 @@ Some specifics:
 
 - macOS: 
 
-  - Before linking with static library, you need framework flags to support serial port enumeration: (already considered by `Makefile`)
+  - If linking the static library, you need to add framework flags to support serial port enumeration: 
 
     ```sh
     -framework CoreFoundation -framework IOKit
@@ -74,15 +74,15 @@ Some specifics:
   
 - Windows
 
-  - The output dynamic library file's suffix is `dll`.
-
-  - To run `make clean` and `make veryclean` you need a Unix shell like git-bash. You can use Cmder.
-
-  - Link SetupAPI to build dynamic library (libraries need to be specified last when using MinGW, https://stackoverflow.com/a/46263157/11854304)：
+  - If linking the static library, you need to link SetupAPI to support serial port enumeration (Note: libraries need to be specified last when using MinGW, https://stackoverflow.com/a/46263157/11854304)：
 
     ```sh
     -lsetupapi
     ```
+
+  - The output dynamic library file's suffix is `dll`.
+
+  - To run `make clean` and `make veryclean` you need a Unix shell like git-bash. You can use Cmder.
 
 
 
